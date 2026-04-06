@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>엑셀 데이터 AI화 로드맵</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #13161e;
+    --surface2: #1a1e28;
+    --border: rgba(255,255,255,0.07);
+    --text: #e8eaf0;
+    --muted: #6b7280;
+    --dim: #3d4352;
+
+    --teal:   #2dd4a8;
+    --teal-bg: rgba(45,212,168,0.08);
+    --teal-border: rgba(45,212,168,0.25);
+
+    --purple:   #a78bfa;
+    --purple-bg: rgba(167,139,250,0.08);
+    --purple-border: rgba(167,139,250,0.25);
+
+    --amber:   #fbbf24;
+    --amber-bg: rgba(251,191,36,0.08);
+    --amber-border: rgba(251,191,36,0.22);
+
+    --coral:   #fb7185;
+    --coral-bg: rgba(251,113,133,0.08);
+    --coral-border: rgba(251,113,133,0.25);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 400;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* ── grid noise overlay ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.012) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.012) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 72px 32px 120px;
+  }
+
+  /* ── header ── */
+  header {
+    margin-bottom: 80px;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp .7s .1s ease forwards;
+  }
+
+  .eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 28px;
+    height: 1px;
+    background: var(--dim);
+  }
+
+  h1 {
+    font-size: clamp(28px, 5vw, 44px);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -.02em;
+    margin-bottom: 20px;
+  }
+
+  h1 em {
+    font-style: normal;
+    background: linear-gradient(90deg, var(--teal), var(--purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .sub {
+    font-size: 15px;
+    color: var(--muted);
+    max-width: 520px;
+    line-height: 1.8;
+  }
+
+  /* ── connector line ── */
+  .timeline {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .connector {
+    display: flex;
+    justify-content: flex-start;
+    padding-left: 28px;
+    height: 40px;
+    align-items: center;
+    opacity: 0;
+    animation: fadeUp .5s ease forwards;
+  }
+  .connector-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--dim), transparent);
+    margin-left: 11px;
+  }
+
+  /* ── phase card ── */
+  .phase {
+    opacity: 0;
+    transform: translateY(24px);
+    animation: fadeUp .6s ease forwards;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    overflow: hidden;
+    transition: border-color .3s, box-shadow .3s;
+  }
+  .phase:hover {
+    box-shadow: 0 0 0 1px var(--accent-color, var(--border));
+  }
+
+  .phase-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 28px 28px 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .phase-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .1em;
+    padding: 4px 8px;
+    border-radius: 6px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+
+  .phase-title-group { flex: 1; }
+
+  .phase-title {
+    font-size: 19px;
+    font-weight: 700;
+    letter-spacing: -.01em;
+    margin-bottom: 5px;
+  }
+
+  .phase-tagline {
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 300;
+  }
+
+  .phase-body {
+    padding: 24px 28px;
+  }
+
+  .phase-desc {
+    font-size: 14px;
+    color: #a0a8b8;
+    line-height: 1.85;
+    margin-bottom: 22px;
+  }
+
+  /* ── steps row ── */
+  .steps {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: #c0c8d8;
+    white-space: nowrap;
+  }
+
+  .step-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ── arrow between steps ── */
+  .step-arrow {
+    color: var(--dim);
+    font-size: 11px;
+    align-self: center;
+  }
+
+  /* ── badge ── */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: .06em;
+    padding: 3px 9px;
+    border-radius: 20px;
+    margin-top: 18px;
+    border: 1px solid;
+  }
+
+  /* ── tech tags ── */
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 14px;
+  }
+
+  .tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    padding: 3px 9px;
+    border-radius: 4px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--muted);
+  }
+
+  /* ── phase color themes ── */
+  .p1 { --accent-color: var(--teal-border); }
+  .p1 .phase-num { background: var(--teal-bg); color: var(--teal); border: 1px solid var(--teal-border); }
+  .p1 .phase-title { color: var(--teal); }
+  .p1 .step-dot { background: var(--teal); }
+  .p1 .badge { color: var(--teal); border-color: var(--teal-border); background: var(--teal-bg); }
+
+  .p2 { --accent-color: var(--purple-border); }
+  .p2 .phase-num { background: var(--purple-bg); color: var(--purple); border: 1px solid var(--purple-border); }
+  .p2 .phase-title { color: var(--purple); }
+  .p2 .step-dot { background: var(--purple); }
+  .p2 .badge { color: var(--purple); border-color: var(--purple-border); background: var(--purple-bg); }
+
+  .p3 { --accent-color: var(--amber-border); }
+  .p3 .phase-num { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-border); }
+  .p3 .phase-title { color: var(--amber); }
+  .p3 .step-dot { background: var(--amber); }
+  .p3 .badge { color: var(--amber); border-color: var(--amber-border); background: var(--amber-bg); }
+
+  .p4 { --accent-color: var(--coral-border); }
+  .p4 .phase-num { background: var(--coral-bg); color: var(--coral); border: 1px solid var(--coral-border); }
+  .p4 .phase-title { color: var(--coral); }
+  .p4 .step-dot { background: var(--coral); }
+  .p4 .badge { color: var(--coral); border-color: var(--coral-border); background: var(--coral-bg); }
+
+  /* ── footer ── */
+  footer {
+    margin-top: 80px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: gap;
+    gap: 12px;
+    opacity: 0;
+    animation: fadeUp .6s 1.4s ease forwards;
+  }
+
+  .footer-left {
+    font-size: 12px;
+    color: var(--dim);
+    font-family: 'DM Mono', monospace;
+  }
+
+  .footer-right {
+    font-size: 12px;
+    color: var(--dim);
+  }
+
+  /* ── animation ── */
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .phase:nth-child(1) { animation-delay: .25s; }
+  .connector:nth-child(2) { animation-delay: .38s; }
+  .phase:nth-child(3) { animation-delay: .45s; }
+  .connector:nth-child(4) { animation-delay: .58s; }
+  .phase:nth-child(5) { animation-delay: .65s; }
+  .connector:nth-child(6) { animation-delay: .78s; }
+  .phase:nth-child(7) { animation-delay: .85s; }
+
+  @media (max-width: 600px) {
+    .wrap { padding: 48px 20px 80px; }
+    .steps { flex-direction: column; }
+    .step-arrow { display: none; }
+    .phase-header { flex-direction: column; gap: 12px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">AI 데이터 전략 로드맵</div>
+    <h1>엑셀 데이터를<br><em>AI 인프라</em>로 전환하는 법</h1>
+    <p class="sub">
+      흩어진 엑셀 파일에서 출발해, 팀 공유 DB를 거쳐 사내 MCP 시스템까지—
+      단계적으로 구축하는 4단계 전략입니다.
+    </p>
+  </header>
+
+  <div class="timeline">
+
+    <!-- Phase 1 -->
+    <div class="phase p1">
+      <div class="phase-header">
+        <div class="phase-num">PHASE 01</div>
+        <div class="phase-title-group">
+          <div class="phase-title">Cowork 파일럿</div>
+          <div class="phase-tagline">개발 없이 지금 바로 · 가능성 검증</div>
+        </div>
+      </div>
+      <div class="phase-body">
+        <p class="phase-desc">
+          로컬 폴더를 지정하고 엑셀 파일 몇 개를 넣어둔 뒤, Claude Cowork에 자연어로
+          리포트·조건검색을 요청합니다. 코드 한 줄 없이 즉시 시작할 수 있고,
+          AI 분석의 가능성과 한계를 빠르게 체감할 수 있습니다.
+        </p>
+        <div class="steps">
+          <div class="step"><span class="step-dot"></span>로컬 폴더 지정</div>
+          <div class="step-arrow">→</div>
+          <div class="step"><span class="step-dot"></span>엑셀 파일 투입</div>
+          <div class="step-arrow">→</div>
+          <div class="step"><span class="step-dot"></span>Cowork에 자연어 요청</div>
+          <div class="step-arrow">→</div>
+          <div class="step"><span class="step-dot"></span>리포트·검색 결과 확인</div>
+        </div>
+        <div class="tags">
+          <span class="tag">Claude Cowork</span>
+          <span class="tag">Excel</span>
+          <span class="tag">No-code</span>
+        </div>
+        <div class="badge">✦ 즉시 시작 가능</div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-line"></div></div>
+
+    <!-- Phase 2 -->
+    <div class="phase p2">
+      <div class="phase-header">
+        <div class="phase-num">PHASE 02</div>
+        <div class="phase-title-group">
+          <div class="phase-title">자체 DB 구축 (개인 / 소팀)</div>
+          <div class="phase-tagline">엑셀 → DB 마이그레이션 · Cowork가 DB에 직접 질의</div>
+        </div>
+      </div>
+      <div class="phase-body">
+        <p class="phase-desc">
+          기존 엑셀들을 ETL 스크립트로 정제해 로컬 DB에 적재합니다.
+          Cowork가 DB에 직접 접근하거나, 자연어 → SQL 변환 방식으로
+          정확한 조건검색과 집계 리포트를 처리합니다.
+          Phase 1의 한계(매번 파일 재읽기, 느린 검색)를 근본적으로 해결합니다.
+        </p>
+        <div class="steps">
+          <div class="step"><span class="step-dot"></span>엑셀 수집·정제</div>
+          <div class="step-arrow">→</div>
+          <div class="step"><span class="step-dot"></span>ETL 스크립트 작성</div>
+          <div class="step-arrow">→</div>
+          <div class="step"><span class="step-dot"></span>로컬 DB 적재</div>
+          <div class="step-arrow">→</div>
+          <div class="step"><span class="step-dot"></span>Cowork 연동</div>
+        </div>
+        <div class="tags">
+          <span class="tag">Node.js</span>
+          <span class="tag">SQLite / MySQL</span>
+          <span class="tag">ETL</span>
+          <span class="tag">자연어→SQL</span>
+        </div>
+        <div class="badge">✦ 소규모 팀 적합</div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-line"></div></div>
+
+    <!-- Phase 3 -->
+    <div class="phase p3">
+      <div class="phase-header">
+        <div class="phase-num">PHASE 03</div>
+        <div class="phase-title-group">
+          <div class="phase-title">팀 공유 DB (사내 인프라)</div>
+          <div class="phase-tagline">중앙 DB 서버 · 팀간 공통 접근 · 권한 관리</div>
+        </div>
+      </div>
+      <div class="phase-body">
+        <p class="phase-desc">
+          RDS / PostgreSQL 같은 중앙 DB 서버로 전환하고, 팀별 롤과 스키마를
+          분리해 접근 권한을 설계합니다. 팀원 각자가 Cowork를 통해 동일한 DB에
+          AI 분석을 요청할 수 있는 구조로, 데이터 사일로 없이 조직 전체가
+          같은 맥락으로 일할 수 있습니다.
+        </p>
+        <div class="steps">
+          <div class="step"><span class="step-dot"></span>중앙 DB 서버 구성</div>
+          <div class="step-arrow">→</div>
+          <div class="step"><span class="step-dot"></span>팀별 권한 설계</div>
+          <div class="step-arrow">→</div>
+          <div class="step"><span class="step-dot"></span>스키마 분리</div>
+          <div class="step-arrow">→</div>
+          <div class="step"><span class="step-dot"></span>팀원 Cowork 공유</div>
+        </div>
+        <div class="tags">
+          <span class="tag">AWS RDS</span>
+          <span class="tag">PostgreSQL</span>
+          <span class="tag">IAM 권한관리</span>
+          <span class="tag">팀 협업</span>
+        </div>
+        <div class="badge">✦ 팀·부서 단위 운영</div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-line"></div></div>
+
+    <!-- Phase 4 -->
+    <div class="phase p4">
+      <div class="phase-header">
+        <div class="phase-num">PHASE 04</div>
+        <div class="phase-title-group">
+          <div class="phase-title">사내 MCP 시스템 구축</div>
+          <div class="phase-tagline">Claude API + 자체 MCP 서버 · 전사 AI 인프라</div>
+        </div>
+      </div>
+      <div class="phase-body">
+        <p class="phase-desc">
+          Claude API 기반의 자체 MCP 서버를 개발하고, DB·내부 API를 툴로 등록합니다.
+          전사 Claude 연동으로 Cowork를 넘어 사내 시스템 전반—업무 자동화, 실시간 운영 리포트,
+          승인 워크플로우 등—을 AI가 직접 처리하는 인프라가 완성됩니다.
+        </p>
+        <div class="steps">
+          <div class="step"><span class="step-dot"></span>MCP 서버 개발</div>
+          <div class="step-arrow">→</div>
+          <div class="step"><span class="step-dot"></span>DB·API 툴 등록</div>
+          <div class="step-arrow">→</div>
+          <div class="step"><span class="step-dot"></span>인증·보안 설계</div>
+          <div class="step-arrow">→</div>
+          <div class="step"><span class="step-dot"></span>전사 Claude 연동</div>
+        </div>
+        <div class="tags">
+          <span class="tag">Claude API</span>
+          <span class="tag">MCP Server</span>
+          <span class="tag">NestJS</span>
+          <span class="tag">전사 AI 자동화</span>
+        </div>
+        <div class="badge">✦ 최종 목표 — 전사 AI 인프라</div>
+      </div>
+    </div>
+
+  </div><!-- /timeline -->
+
+  <footer>
+    <div class="footer-left">excel → ai infrastructure · 4-phase roadmap</div>
+    <div class="footer-right">Claude Cowork · Claude API · MCP</div>
+  </footer>
+
+</div>
+</body>
+</html>
